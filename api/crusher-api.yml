@@ -1,0 +1,433 @@
+{
+   "openapi": "3.0.3",
+   "info": {
+      "title": "Crusher",
+      "description": "Vehicle recycling app",
+      "contact": {
+         "email": "crusher@demoapp.com"
+      },
+      "version": "1.0.0"
+   },
+   "servers": [
+      {
+         "url": "https://demoapp.com/api/v1"
+      }
+   ],
+   "security": [],
+   "paths": {
+      "/vehicles_by_dt": {
+         "get": {
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/from_dt"
+               },
+               {
+                  "$ref": "#/components/parameters/to_dt"
+               }
+            ],
+            "summary": "Search Vehicles by Date",
+            "x-mojo-to": "Vehicles#vehicles_by_dt",
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Vehicle"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/vehicles_by_vin": {
+         "get": {
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/vin"
+               }
+            ],
+            "summary": "Search Vehicles by VIN #",
+            "x-mojo-to": "Vehicles#vehicles_by_vin",
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Vehicle"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/vehicles": {
+         "get": {
+            "parameters": [
+            ],
+            "summary": "Returns all the vehicles in the system.",
+            "x-mojo-to": "Vehicles#show_all",
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Vehicle"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Unparsable",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Error"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/makes": {
+         "get": {
+            "parameters": [
+            ],
+            "summary": "Returns full list of all makes.",
+            "x-mojo-to": "Vehicles#get_all_makes",
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Make"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Unparsable",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Error"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/models_for_make": {
+         "get": {
+            "parameters": [
+                           {
+               "$ref": "#/components/parameters/make_id"
+               }
+            ],
+            "summary": "Returns list of models for a given make.",
+            "x-mojo-to": "Vehicles#get_models_for_make",
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Model"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Unparsable",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Error"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "/add_vehicle": {
+         "post": {
+            "parameters": [
+               {
+                  "$ref": "#/components/parameters/vin"
+               },
+               {
+                  "$ref": "#/components/parameters/make"
+               },
+               {
+                  "$ref": "#/components/parameters/model"
+               },
+               {
+                  "$ref": "#/components/parameters/mfr_dt"
+               },
+               {
+                  "$ref": "#/components/parameters/plate"
+               }
+            ],
+            "summary": "Adds new vehicles to the system.",
+            "x-mojo-to": "Vehicles#add_vehicle",
+            "requestBody": {
+               "description": "The expression to evaluate",
+               "required": true,
+               "content": {
+                  "application/json": {
+                     "schema": {
+                        "$ref": "#/components/schemas/Expression"
+                     }
+                  }
+               }
+            },
+            "responses": {
+               "200": {
+                  "description": "OK",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Success"
+                        }
+                     }
+                  }
+               },
+               "400": {
+                  "description": "Unparsable",
+                  "content": {
+                     "application/json": {
+                        "schema": {
+                           "$ref": "#/components/schemas/Error"
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "components": {
+      "parameters": {
+         "Expression": {
+            "in": "query",
+            "name": "expression",
+            "required": true,
+            "schema": {
+               "type": "string"
+            }
+         },
+         "from_dt": {
+            "in": "query",
+            "description": "YYYYMMDD",
+            "name": "from_dt",
+            "required": true,
+            "schema": {
+               "type": "integer"
+            }
+         },
+         "to_dt": {
+            "in": "query",
+            "description": "YYYYMMDD",
+            "name": "to_dt",
+            "required": true,
+            "schema": {
+               "type": "integer"
+            }
+         },
+         "vin": {
+            "in": "query",
+            "description": "VIN #",
+            "name": "vin",
+            "required": true,
+            "schema": {
+               "type": "string"
+            }
+         },
+         "make": {
+            "in": "query",
+            "description": "Make",
+            "name": "make",
+            "required": true,
+            "schema": {
+               "type": "string"
+            }
+         },
+         "model": {
+            "in": "query",
+            "description": "Model",
+            "name": "model",
+            "required": true,
+            "schema": {
+               "type": "string"
+            }
+         },
+         "mfr_dt": {
+            "in": "query",
+            "description": "YYYYMMDD",
+            "name": "mfr_dt",
+            "required": true,
+            "schema": {
+               "type": "integer"
+            }
+         },
+         "make_id": {
+            "in": "query",
+            "description": "Make ID",
+            "name": "make_id",
+            "required": true,
+            "schema": {
+               "type": "integer"
+            }
+         },
+         "plate": {
+            "in": "query",
+            "description": "Plate #",
+            "name": "plate",
+            "required": true,
+            "schema": {
+               "type": "string"
+            }
+         }
+      },
+      "schemas": {
+         "Vehicle": {
+            "additionalProperties": false,
+            "type": "array",
+            "items" : {
+               "type": "object"
+            },
+            "properties": {
+               "vin": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "img_path": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "mfr_date": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "plate": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "create_date": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "disp_date": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "update_date": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "model_id": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "make_id": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "status": {
+                  "type": "string",
+                  "minLength": 1
+               }
+            }
+         },
+         "Make": {
+            "additionalProperties": false,
+            "type": "array",
+            "items" : {
+               "type": "object"
+            },
+            "properties": {
+               "make": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "make_id": {
+                  "type": "integer",
+                  "minLength": 1
+               }
+            }
+         },
+         "Model": {
+            "additionalProperties": false,
+            "type": "array",
+            "items" : {
+               "type": "object"
+            },
+            "properties": {
+               "model": {
+                  "type": "string",
+                  "minLength": 1
+               },
+               "model_id": {
+                  "type": "integer",
+                  "minLength": 1
+               }
+            }
+         },
+         "Success": {
+            "additionalProperties": false,
+            "type": "string",
+            "properties": {
+               "success": {
+                  "type": "string",
+                  "minLength": 1
+               }
+            }
+         },
+         "Expression": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+               "expression": {
+                  "type": "string",
+                  "minLength": 1
+               }
+            }
+         },
+         "Result": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+               "given": {
+                  "$ref": "#/components/schemas/Expression"
+               },
+               "result": {
+                  "type": "number"
+               }
+            }
+         },
+         "Error": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+               "expression": {
+                  "$ref": "#/components/schemas/Expression"
+               },
+               "errors": {
+                  "type": "array",
+                  "items": {
+                     "type": "string"
+                  }
+               }
+            }
+         }
+      }
+   }
+}
